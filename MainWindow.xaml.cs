@@ -20,15 +20,69 @@ namespace LifeGame
     /// </summary>
     public partial class MainWindow : Window
     {
+        private int shape = 25;
+
         public MainWindow()
         {
             InitializeComponent();
         }
 
+        private void playgroundLoaded(object sender, RoutedEventArgs e)
+        {
+            foreach (int i in Enumerable.Range(0, shape))
+            {
+                // Define the Columns
+                ColumnDefinition colDef = new ColumnDefinition();
+                playground.ColumnDefinitions.Add(colDef);
+
+                // Define the Rows
+                RowDefinition rowDef = new RowDefinition();
+                playground.RowDefinitions.Add(rowDef);
+            }
+
+            foreach (int j in Enumerable.Range(0, shape))
+            {
+                foreach (int k in Enumerable.Range(0, shape))
+                {
+                    // Define the buttons
+                    Button btn = new Button();
+                    btn.Background = Brushes.AntiqueWhite;
+                    btn.Click += new RoutedEventHandler(this.ActivateBtn);
+                    Grid.SetColumn(btn, j);
+                    Grid.SetRow(btn, k);
+                    playground.Children.Add(btn);
+                }
+            }
+        }
+
+        private void ActivateBtn(Object sender, RoutedEventArgs e)
+        {
+            Button clickedButton = (Button)sender;
+            clickedButton.Background = Brushes.Gray;
+        }
+
         private void startClick(object sender, RoutedEventArgs e)
         {
-            textBoxInfo.Text = tb0_1.Text;
-            tb0_0.Text = "1";
+            textBoxInfo.Text = "Hello world !!";
+            controlGrid();
+        }
+
+        private void controlGrid()
+        {
+            for (int i=0; i < playground.Children.Count; i++)
+            {
+                Button child = (Button) VisualTreeHelper.GetChild(playground, i);
+                //TODO stocker dans un tableau
+                child.Background = Brushes.Gray;
+                Console.WriteLine(VisualTreeHelper.GetChild(playground, i));
+
+            }
+            System.Collections.IEnumerator box = playground.Children.GetEnumerator();
+            while (box.MoveNext())
+            {
+                Object blok = box.Current;
+                textBoxInfo.Text = blok.ToString();
+            }
         }
     }
 }
