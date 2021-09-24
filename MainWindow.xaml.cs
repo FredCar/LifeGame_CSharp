@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -15,12 +16,11 @@ using System.Windows.Shapes;
 
 namespace LifeGame
 {
-    /// <summary>
-    /// Logique d'interaction pour MainWindow.xaml
-    /// </summary>
     public partial class MainWindow : Window
     {
-        private int shape = 5;
+        private int shape = 50;
+        private bool run = false;
+        private int delay = 125;
 
         public MainWindow()
         {
@@ -58,36 +58,47 @@ namespace LifeGame
         private void ActivateBtn(Object sender, RoutedEventArgs e)
         {
             Button clickedButton = (Button)sender;
-            clickedButton.Background = Brushes.Gray;
-        }
-
-        private void startClick(object sender, RoutedEventArgs e)
-        {
-            //textBoxInfo.Text = "Hello world !!";
-            //controlGrid();
-
-            //DEBUG
-            int nb = 24;
-            Button test = (Button)VisualTreeHelper.GetChild(playground, nb);
-            test.Background = Brushes.Green;
-
-            List<int> neighbors = FindNeighbors(nb);
-            foreach (int n in neighbors)
+            if (clickedButton.Background == Brushes.AntiqueWhite)
             {
-                try
-                {
-                    Button neighbor = (Button)VisualTreeHelper.GetChild(playground, n);
-                    neighbor.Background = Brushes.Red;
-                }
-                catch
-                {
-                    textBoxInfo.Text += n.ToString();
-                }
+                clickedButton.Background = Brushes.Gray;
+            }
+            else
+            {
+                clickedButton.Background = Brushes.AntiqueWhite;
             }
         }
 
-        private void controlGrid()
+        private async void startClick(object sender, RoutedEventArgs e)
         {
+            bool isNumeric = int.TryParse(tbSpeed.Text, out delay);
+            if (!isNumeric)
+            {
+                tbSpeed.Text = "125";
+                delay = 125;
+            }
+
+            if (run)
+            {
+                run = false;
+                btnStart.Content = "Start";
+            }
+            else
+            {
+                run = true;
+                btnStart.Content = "Stop";
+            }
+
+            while (run)
+            {
+                ControlGrid();
+                await Task.Delay(delay);
+            }
+        }
+
+        private void ControlGrid()
+        {
+            List<int> temp = new List<int>();
+
             for (int i = 0; i < playground.Children.Count; i++)
             {
                 List<int> neighbors = FindNeighbors(i);
@@ -101,22 +112,43 @@ namespace LifeGame
                     }
                 }
 
-                //int total = neighbors.Sum(x => Convert.ToInt32(x));
-                //Console.WriteLine(">>> " + total);
-
                 Button child = (Button) VisualTreeHelper.GetChild(playground, i);
-                //TODO stocker dans un tableau
-                child.Background = Brushes.Gray;
-                //Console.WriteLine(VisualTreeHelper.GetChild(playground, i));
-
+                if (child.Background == Brushes.Gray)
+                {
+                    if (total == 2 || total == 3)
+                    {
+                        temp.Add(1);
+                    }
+                    else
+                    {
+                        temp.Add(0);
+                    }
+                }
+                else
+                {
+                    if (total == 3)
+                    {
+                        temp.Add(1);
+                    }
+                    else
+                    {
+                        temp.Add(0);
+                    }
+                }
             }
 
-            //System.Collections.IEnumerator box = playground.Children.GetEnumerator();
-            //while (box.MoveNext())
-            //{
-            //    Object blok = box.Current;
-            //    textBoxInfo.Text = blok.ToString();
-            //}
+            foreach (int i in Enumerable.Range(0, playground.Children.Count))
+            {
+                Button child = (Button)VisualTreeHelper.GetChild(playground, i);
+                if (temp[i] == 1)
+                {
+                    child.Background = Brushes.Gray;
+                }
+                else
+                {
+                    child.Background = Brushes.AntiqueWhite;
+                }
+            }
         }
 
         private List<int> FindNeighbors(int boxNumber)
