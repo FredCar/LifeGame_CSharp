@@ -13,6 +13,9 @@ namespace LifeGame
         private int shape = 25;
         private bool run = false;
         private int delay = 125;
+        private SolidColorBrush colorAlive = Brushes.Gray;
+        private SolidColorBrush colorDead = Brushes.AntiqueWhite;
+
 
         public MainWindow()
         {
@@ -43,7 +46,7 @@ namespace LifeGame
                 {
                     // Define the buttons
                     Button btn = new Button();
-                    btn.Background = Brushes.AntiqueWhite;
+                    btn.Background = colorDead;
                     btn.Click += new RoutedEventHandler(ActivateBtn);
                     Grid.SetColumn(btn, j);
                     Grid.SetRow(btn, k);
@@ -55,13 +58,13 @@ namespace LifeGame
         private void ActivateBtn(Object sender, RoutedEventArgs e)
         {
             Button clickedButton = (Button)sender;
-            if (clickedButton.Background == Brushes.AntiqueWhite)
+            if (clickedButton.Background == colorDead)
             {
-                clickedButton.Background = Brushes.Gray;
+                clickedButton.Background = colorAlive;
             }
             else
             {
-                clickedButton.Background = Brushes.AntiqueWhite;
+                clickedButton.Background = colorDead;
             }
         }
 
@@ -73,6 +76,14 @@ namespace LifeGame
                 tbShape.Text = "25";
                 shape = 25;
             }
+
+            Color colorDeadBrush = (Color)ColorConverter.ConvertFromString(comboBoxDead.Text);
+            SolidColorBrush brushDead = new SolidColorBrush(colorDeadBrush);
+            colorDead = brushDead;
+
+            Color colorAliveBrush = (Color)ColorConverter.ConvertFromString(comboBoxAlive.Text);
+            SolidColorBrush brushAlive = new SolidColorBrush(colorAliveBrush);
+            colorAlive = brushAlive;
 
             playground.Children.Clear();
             playground.RowDefinitions.Clear();
@@ -126,7 +137,7 @@ namespace LifeGame
             for (int i = 0; i < playground.Children.Count; i++)
             {
                 Button child = (Button)VisualTreeHelper.GetChild(playground, i);
-                if (child.Background == Brushes.Gray)
+                if (child.Background == colorAlive)
                 {
                     return true;
                 }
@@ -145,14 +156,14 @@ namespace LifeGame
                 foreach (int n in neighbors)
                 {
                     Button neighbor = (Button)VisualTreeHelper.GetChild(playground, n);
-                    if (neighbor.Background == Brushes.Gray)
+                    if (neighbor.Background == colorAlive)
                     {
                         total++;
                     }
                 }
 
                 Button child = (Button) VisualTreeHelper.GetChild(playground, i);
-                if (child.Background == Brushes.Gray)
+                if (child.Background == colorAlive)
                 {
                     if (total == 2 || total == 3)
                     {
@@ -181,11 +192,11 @@ namespace LifeGame
                 Button child = (Button)VisualTreeHelper.GetChild(playground, i);
                 if (temp[i] == 1)
                 {
-                    child.Background = Brushes.Gray;
+                    child.Background = colorAlive;
                 }
                 else
                 {
-                    child.Background = Brushes.AntiqueWhite;
+                    child.Background = colorDead;
                 }
             }
         }
