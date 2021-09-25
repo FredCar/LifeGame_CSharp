@@ -21,6 +21,11 @@ namespace LifeGame
 
         private void playgroundLoaded(object sender, RoutedEventArgs e)
         {
+            MakeGrid();
+        }
+
+        private void MakeGrid()
+        {
             foreach (int i in Enumerable.Range(0, shape))
             {
                 // Define the Columns
@@ -60,10 +65,26 @@ namespace LifeGame
             }
         }
 
+        private void ClickGridRefresh(object sender, RoutedEventArgs e)
+        {
+            bool isNumericShape = int.TryParse(tbShape.Text, out shape);
+            if (!isNumericShape)
+            {
+                tbShape.Text = "25";
+                shape = 25;
+            }
+
+            playground.Children.Clear();
+            playground.RowDefinitions.Clear();
+            playground.ColumnDefinitions.Clear();
+
+            MakeGrid();
+        }
+
         private void startClick(object sender, RoutedEventArgs e)
         {
-            bool isNumeric = int.TryParse(tbSpeed.Text, out delay);
-            if (!isNumeric)
+            bool isNumericSpeed = int.TryParse(tbSpeed.Text, out delay);
+            if (!isNumericSpeed)
             {
                 tbSpeed.Text = "125";
                 delay = 125;
