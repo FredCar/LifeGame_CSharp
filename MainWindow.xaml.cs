@@ -1,24 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace LifeGame
 {
     public partial class MainWindow : Window
     {
-        private int shape = 50;
+        private int shape = 25;
         private bool run = false;
         private int delay = 125;
 
@@ -68,7 +60,7 @@ namespace LifeGame
             }
         }
 
-        private async void startClick(object sender, RoutedEventArgs e)
+        private void startClick(object sender, RoutedEventArgs e)
         {
             bool isNumeric = int.TryParse(tbSpeed.Text, out delay);
             if (!isNumeric)
@@ -81,18 +73,44 @@ namespace LifeGame
             {
                 run = false;
                 btnStart.Content = "Start";
+                btnStart.Background = Brushes.Green;
             }
             else
             {
                 run = true;
                 btnStart.Content = "Stop";
+                btnStart.Background = Brushes.Red;
             }
 
+            Play();
+        }
+
+        private async void Play()
+        {
             while (run)
             {
                 ControlGrid();
                 await Task.Delay(delay);
+                if (!ThereIsLife())
+                {
+                    run = false;
+                    btnStart.Content = "Start";
+                    btnStart.Background = Brushes.Green;
+                }
             }
+        }
+
+        private bool ThereIsLife()
+        {
+            for (int i = 0; i < playground.Children.Count; i++)
+            {
+                Button child = (Button)VisualTreeHelper.GetChild(playground, i);
+                if (child.Background == Brushes.Gray)
+                {
+                    return true;
+                }
+            }
+            return false;
         }
 
         private void ControlGrid()

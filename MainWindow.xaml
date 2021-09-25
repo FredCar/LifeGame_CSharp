@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:LifeGame"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="The game of life" Height="507" Width="903">
     <Window.Resources>
         <SolidColorBrush x:Key="blanc" Color="White"/>
         <SolidColorBrush x:Key="noir" Color="Black"/>
@@ -16,14 +16,14 @@
                 <ColumnDefinition Width="571*"/>
                 <ColumnDefinition Width="229*"/>
             </Grid.ColumnDefinitions>
-            
+
             <Grid x:Name="playground" Loaded="playgroundLoaded" Margin="10,10,10,10">
             </Grid>
 
             <StackPanel Grid.Column="1" VerticalAlignment="Bottom">
                 <TextBlock Text="Speed (in milliseconds)" TextAlignment="Center" FontWeight="Bold" FontSize="18" Margin="0,0,0,10" />
                 <TextBox x:Name="tbSpeed" Text="125" FontWeight="Bold" FontSize="22" TextAlignment="Center" Margin="0,0,0,20" Foreground="White" Background="Black" Width="100" />
-                <Button x:Name="btnStart" Content="Start" Grid.Column="1" Width="150" Height="50" FontSize="36" FontWeight="Bold" VerticalAlignment="Bottom" Margin="0,0,0,30" Click="startClick"/>
+                <Button x:Name="btnStart" Content="Start" Grid.Column="1" Width="150" Height="50" FontSize="36" FontWeight="Bold" VerticalAlignment="Bottom" Margin="0,0,0,30" Click="startClick" BorderBrush="{x:Null}" Background="#FF0CA308"/>
             </StackPanel>
         </Grid>
 
