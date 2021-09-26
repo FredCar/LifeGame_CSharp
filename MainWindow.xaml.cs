@@ -106,6 +106,11 @@ namespace LifeGame
                 tbSpeed.Text = "125";
                 delay = 125;
             }
+            if (delay <= 0)
+            {
+                tbSpeed.Text = "1";
+                delay = 1;
+            }
 
             // Retrieve ifinite loop checkbox value
             infiniteLoop = (bool)checkBoxInfinite.IsChecked;
