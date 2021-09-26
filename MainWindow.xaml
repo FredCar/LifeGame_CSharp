@@ -50,7 +50,7 @@
                     <ComboBoxItem Content="Pink"/>
                     <ComboBoxItem Content="Red"/>
                     <ComboBoxItem Content="Silver"/>
-                    <ComboBoxItem Content="White"/>
+                    <ComboBoxItem Content="White"/>  
                 </ComboBox>
                 <TextBlock Text="Shape x Shape" TextAlignment="Center" FontSize="18" Margin="0,0,0,2" VerticalAlignment="Center" />
                 <TextBox x:Name="tbShape" Text="25" FontSize="22" TextAlignment="Center" Margin="0,0,0,20" Foreground="White" Background="Black" Width="100" Height="30" />

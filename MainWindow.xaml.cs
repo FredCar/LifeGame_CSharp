@@ -11,7 +11,7 @@ namespace LifeGame
     public partial class MainWindow : Window
     {
         private int shape = 25;
-        private bool run = false;
+        private bool run = false;  
         private int delay = 125;
         private SolidColorBrush colorAlive = Brushes.Gray;
         private SolidColorBrush colorDead = Brushes.AntiqueWhite;
@@ -40,11 +40,11 @@ namespace LifeGame
                 playground.RowDefinitions.Add(rowDef);
             }
 
+            // Define the buttons
             foreach (int j in Enumerable.Range(0, shape))
             {
                 foreach (int k in Enumerable.Range(0, shape))
                 {
-                    // Define the buttons
                     Button btn = new Button();
                     btn.Background = colorDead;
                     btn.Click += new RoutedEventHandler(ActivateBtn);
@@ -70,6 +70,7 @@ namespace LifeGame
 
         private void ClickGridRefresh(object sender, RoutedEventArgs e)
         {
+            // Retrieve the shape field
             bool isNumericShape = int.TryParse(tbShape.Text, out shape);
             if (!isNumericShape)
             {
@@ -77,6 +78,7 @@ namespace LifeGame
                 shape = 25;
             }
 
+            // Retrieve the colors
             Color colorDeadBrush = (Color)ColorConverter.ConvertFromString(comboBoxDead.Text);
             SolidColorBrush brushDead = new SolidColorBrush(colorDeadBrush);
             colorDead = brushDead;
@@ -85,15 +87,18 @@ namespace LifeGame
             SolidColorBrush brushAlive = new SolidColorBrush(colorAliveBrush);
             colorAlive = brushAlive;
 
+            // Clear the old gird content
             playground.Children.Clear();
             playground.RowDefinitions.Clear();
             playground.ColumnDefinitions.Clear();
 
+            // Generate a new grid
             MakeGrid();
         }
 
         private void startClick(object sender, RoutedEventArgs e)
         {
+            // Retrieve the speed field
             bool isNumericSpeed = int.TryParse(tbSpeed.Text, out delay);
             if (!isNumericSpeed)
             {
@@ -134,6 +139,7 @@ namespace LifeGame
 
         private bool ThereIsLife()
         {
+            // Check if there are any living cells
             for (int i = 0; i < playground.Children.Count; i++)
             {
                 Button child = (Button)VisualTreeHelper.GetChild(playground, i);
@@ -147,10 +153,12 @@ namespace LifeGame
 
         private void ControlGrid()
         {
+            // Temporary list to store the new grid values
             List<int> temp = new List<int>();
 
             for (int i = 0; i < playground.Children.Count; i++)
             {
+                // Calculate the total of neighbors alive
                 List<int> neighbors = FindNeighbors(i);
                 int total = 0;
                 foreach (int n in neighbors)
@@ -162,6 +170,7 @@ namespace LifeGame
                     }
                 }
 
+                // Apply the base rules
                 Button child = (Button) VisualTreeHelper.GetChild(playground, i);
                 if (child.Background == colorAlive)
                 {
@@ -187,6 +196,7 @@ namespace LifeGame
                 }
             }
 
+            // Recompose a new grid from the temporary list
             foreach (int i in Enumerable.Range(0, playground.Children.Count))
             {
                 Button child = (Button)VisualTreeHelper.GetChild(playground, i);
@@ -213,7 +223,7 @@ namespace LifeGame
             temp.Add("right", boxNumber + shape);
             temp.Add("bottom-right", boxNumber + (shape + 1));
 
-            // Si boxNumber est sur la 1ere colonne
+            // If boxNumber is on the first column
             if (temp["top-left"] < 0)
             {
                 temp["top-left"] = shape * shape + temp["top-left"];
@@ -226,7 +236,7 @@ namespace LifeGame
             {
                 temp["bottom-left"] = shape * shape + temp["bottom-left"];
             }
-            // Si boxNumber est sur la derniere colonne
+            // If boxNumber is on the last column
             if (temp["top-right"] >= shape * shape)
             {
                 temp["top-right"] = temp["top-right"] - shape * shape;
@@ -240,14 +250,14 @@ namespace LifeGame
                 temp["bottom-right"] = temp["bottom-right"] - shape * shape;
             }
 
-            // Si retour a la derniere ligne, alors décaler de 1 vers la doite
+            // If return to the last line, then shift 1 to the right
             if (temp["top"] % shape == shape - 1 || temp["top-left"] % shape == shape - 1 || temp["top-right"] % shape == shape - 1)
             {
                 temp["top-left"] += shape;
                 temp["top"] += shape;
                 temp["top-right"] += shape;
             }
-            // Si retour a la premiere ligne, alors décaler de 1 vers la gauche
+            // If return to the first line, then shift 1 to the left
             if (temp["bottom"] % shape == 0 || temp["bottom-left"] % shape == 0 || temp["bottom-right"] % shape == 0)
             {
                 temp["bottom-left"] -= shape;
@@ -255,7 +265,7 @@ namespace LifeGame
                 temp["bottom-right"] -= shape;
             }
 
-            // Ajuster les retours de coins
+            // Adjust corner returns
             if (temp["top-left"] > shape * shape)
             {
                 temp["top-left"] = temp["top-left"] - shape * shape;
