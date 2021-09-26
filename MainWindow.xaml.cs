@@ -13,6 +13,7 @@ namespace LifeGame
         private int shape = 25;
         private bool run = false;  
         private int delay = 125;
+        private bool infiniteLoop = true;
         private SolidColorBrush colorAlive = Brushes.Gray;
         private SolidColorBrush colorDead = Brushes.AntiqueWhite;
 
@@ -106,6 +107,9 @@ namespace LifeGame
                 delay = 125;
             }
 
+            // Retrieve ifinite loop checkbox value
+            infiniteLoop = (bool)checkBoxInfinite.IsChecked;
+
             if (run)
             {
                 run = false;
@@ -159,10 +163,22 @@ namespace LifeGame
             for (int i = 0; i < playground.Children.Count; i++)
             {
                 // Calculate the total of neighbors alive
-                List<int> neighbors = FindNeighbors(i);
+                List<int> neighbors = new List<int>();
+                if (infiniteLoop)
+                {
+                    neighbors = FindNeighborsInfinite(i);
+                }
+                else
+                {
+                    neighbors = FindNeighborsFinished(i);
+                }
                 int total = 0;
                 foreach (int n in neighbors)
                 {
+                    if (n == -1)
+                    {
+                        continue;
+                    }
                     Button neighbor = (Button)VisualTreeHelper.GetChild(playground, n);
                     if (neighbor.Background == colorAlive)
                     {
@@ -211,7 +227,50 @@ namespace LifeGame
             }
         }
 
-        private List<int> FindNeighbors(int boxNumber)
+        private List<int> FindNeighborsFinished(int boxNumber)
+        {
+            IDictionary<string, int> temp = new Dictionary<string, int>();
+            temp.Add("top-left", boxNumber - (shape + 1));
+            temp.Add("left", boxNumber - shape);
+            temp.Add("bottom-left", boxNumber - (shape - 1));
+            temp.Add("top", boxNumber - 1);
+            temp.Add("bottom", boxNumber + 1);
+            temp.Add("top-right", boxNumber + (shape - 1));
+            temp.Add("right", boxNumber + shape);
+            temp.Add("bottom-right", boxNumber + (shape + 1));
+
+            // If return to the last line, then shift 1 to the right
+            if (temp["top"] % shape == shape - 1 || temp["top-left"] % shape == shape - 1 || temp["top-right"] % shape == shape - 1)
+            {
+                temp["top-left"] = -1;
+                temp["top"] = -1;
+                temp["top-right"] = -1;
+            }
+            // If return to the first line, then shift 1 to the left
+            if (temp["bottom"] % shape == 0 || temp["bottom-left"] % shape == 0 || temp["bottom-right"] % shape == 0)
+            {
+                temp["bottom-left"] = -1;
+                temp["bottom"] = -1;
+                temp["bottom-right"] = -1;
+            }
+
+            List<int> neighbors = new List<int>();
+            foreach (int n in temp.Values)
+            {
+                if (n < 0 || n > (shape * shape - 1))
+                {
+                    neighbors.Add(-1);
+                }
+                else
+                {
+                    neighbors.Add(n);
+                }
+            }
+
+            return neighbors;
+        }
+
+        private List<int> FindNeighborsInfinite(int boxNumber)
         {
             IDictionary<string, int> temp = new Dictionary<string, int>();
             temp.Add("top-left", boxNumber - (shape + 1));

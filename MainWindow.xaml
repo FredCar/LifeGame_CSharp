@@ -59,7 +59,11 @@
                 <Separator Height="5" Background="#FF060606" Margin="20,2,20,10" />
                 
                 <TextBlock Text="Speed (in milliseconds)" TextAlignment="Center" FontSize="18" Margin="0,0,0,2" />
-                <TextBox x:Name="tbSpeed" Text="125" FontSize="22" TextAlignment="Center" Margin="0,0,0,20" Foreground="White" Background="Black" Width="100" />
+                <TextBox x:Name="tbSpeed" Text="125" FontSize="22" TextAlignment="Center" Margin="0,0,0,10" Foreground="White" Background="Black" Width="100" />
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,0,10">
+                    <TextBlock Text="Infinite loop" TextAlignment="Center" FontSize="18" Margin="0,0,5,0" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" />
+                    <CheckBox x:Name="checkBoxInfinite" Margin="5,0,0,0" VerticalAlignment="Center" IsChecked="True" />
+                </StackPanel>
                 <Button x:Name="btnStart" Content="Start" Grid.Column="1" Width="150" Height="50" FontSize="36" FontWeight="Bold" VerticalAlignment="Bottom" Margin="0,0,0,30" Click="startClick" BorderBrush="{x:Null}" Background="#FF0CA308"/>
             </StackPanel>
         </Grid>
