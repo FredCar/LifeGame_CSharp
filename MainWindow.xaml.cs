@@ -130,8 +130,6 @@ namespace LifeGame
             oldShape = shape;
         }
 
-        // TODO Add clear button
-
         private List<int> SaveGrid()
         {
             List<int> savedGrid = new List<int>();
@@ -166,6 +164,17 @@ namespace LifeGame
                     child.Background = colorDead;
                 }
             }
+        }
+
+        private void ClickGridClear(object sender, RoutedEventArgs e)
+        {
+            // Clear the old gird content
+            playground.Children.Clear();
+            playground.RowDefinitions.Clear();
+            playground.ColumnDefinitions.Clear();
+
+            // Generate a new grid
+            MakeGrid();
         }
 
         private void startClick(object sender, RoutedEventArgs e)

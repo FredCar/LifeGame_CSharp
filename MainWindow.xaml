@@ -54,8 +54,11 @@
                 </ComboBox>
                 <TextBlock Text="Shape x Shape" TextAlignment="Center" FontSize="18" Margin="0,0,0,2" VerticalAlignment="Center" />
                 <TextBox x:Name="tbShape" Text="25" FontSize="22" TextAlignment="Center" Margin="0,0,0,20" Foreground="White" Background="Black" Width="100" Height="30" />
-                <Button x:Name="btnGridRefresh" Width="150" Height="50" Margin="5,0,0,20" Content="Refresh" Background="#FF0056FF" Foreground="White" Click="ClickGridRefresh" FontSize="22" FontWeight="Normal" />
-                
+                <StackPanel Orientation="Horizontal" Margin="20,0,20,0">
+                    <Button x:Name="btnGridRefresh" Width="100" Height="25" Margin="0,0,0,20" Content="Refresh" Background="#FF0056FF" Foreground="White" Click="ClickGridRefresh" FontSize="18" FontWeight="Normal" HorizontalAlignment="Left" />
+                    <Button x:Name="btnGridClear" Width="100" Height="25" Margin="15,0,0,20" Content="Clear" Background="#FFFF5200" Foreground="White" Click="ClickGridClear" FontSize="18" FontWeight="Normal" HorizontalAlignment="Right" />
+                </StackPanel>
+
                 <Separator Height="5" Background="#FF060606" Margin="20,2,20,10" />
                 
                 <TextBlock Text="Speed (in milliseconds)" TextAlignment="Center" FontSize="18" Margin="0,0,0,2" />
