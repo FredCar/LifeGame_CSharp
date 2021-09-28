@@ -11,7 +11,8 @@ namespace LifeGame
     public partial class MainWindow : Window
     {
         private int shape = 25;
-        private bool run = false;  
+        private int oldShape = 25; // Used to know if we can redraw the cells in the new grid
+        private bool run = false;
         private int delay = 125;
         private bool infiniteLoop = true;
         private SolidColorBrush colorAlive = Brushes.Gray;
@@ -58,6 +59,7 @@ namespace LifeGame
 
         private void ActivateBtn(Object sender, RoutedEventArgs e)
         {
+            // Activate or deactivate cells on click
             Button clickedButton = (Button)sender;
             if (clickedButton.Background == colorDead)
             {
@@ -71,12 +73,37 @@ namespace LifeGame
 
         private void ClickGridRefresh(object sender, RoutedEventArgs e)
         {
+            // Save the old grid
+            List<int> savedGrid = SaveGrid();
+
             // Retrieve the shape field
             bool isNumericShape = int.TryParse(tbShape.Text, out shape);
             if (!isNumericShape)
             {
                 tbShape.Text = "25";
                 shape = 25;
+            }
+
+            // Check if the shape has changed
+            if (shape != oldShape)
+            {
+                MessageBoxResult result = MessageBox.Show(
+                    "If the shape has changed, \nthe cells can't not be redraw.",
+                    "My App",
+                    MessageBoxButton.OKCancel,
+                    MessageBoxImage.Warning,
+                    MessageBoxResult.Cancel
+                );
+
+                switch (result)
+                {
+                    case MessageBoxResult.OK:
+                        break;
+                    case MessageBoxResult.Cancel:
+                        shape = oldShape;
+                        tbShape.Text = shape.ToString();
+                        return;
+                }
             }
 
             // Retrieve the colors
@@ -95,6 +122,50 @@ namespace LifeGame
 
             // Generate a new grid
             MakeGrid();
+            if (shape == oldShape)
+            {
+                RedrawGrid(savedGrid);
+            }
+
+            oldShape = shape;
+        }
+
+        // TODO Add clear button
+
+        private List<int> SaveGrid()
+        {
+            List<int> savedGrid = new List<int>();
+            for (int i = 0; i < playground.Children.Count; i++)
+            {
+                Button child = (Button)VisualTreeHelper.GetChild(playground, i);
+                if (child.Background == colorAlive)
+                {
+                    savedGrid.Add(1);
+                }
+                else
+                {
+                    savedGrid.Add(0);
+                }
+            }
+
+            return savedGrid;
+        }
+
+        private void RedrawGrid(List<int> savedGrid)
+        {
+            // Redraw odld cells
+            for (int i = 0; i < playground.Children.Count; i++)
+            {
+                Button child = (Button)VisualTreeHelper.GetChild(playground, i);
+                if (savedGrid[i] == 1)
+                {
+                    child.Background = colorAlive;
+                }
+                else
+                {
+                    child.Background = colorDead;
+                }
+            }
         }
 
         private void startClick(object sender, RoutedEventArgs e)
@@ -137,6 +208,8 @@ namespace LifeGame
             {
                 ControlGrid();
                 await Task.Delay(delay);
+
+                // Stop if there are no more cells alive on the grid
                 if (!ThereIsLife())
                 {
                     run = false;
@@ -162,7 +235,7 @@ namespace LifeGame
 
         private void ControlGrid()
         {
-            // Temporary list to store the new grid values
+            // Temporary list to store the next grid values
             List<int> temp = new List<int>();
 
             for (int i = 0; i < playground.Children.Count; i++)
@@ -171,7 +244,7 @@ namespace LifeGame
                 List<int> neighbors = new List<int>();
                 if (infiniteLoop)
                 {
-                    neighbors = FindNeighborsInfinite(i);
+                    neighbors = FindNeighborsLoop(i);
                 }
                 else
                 {
@@ -232,8 +305,12 @@ namespace LifeGame
             }
         }
 
+        /// <summary>
+        /// Find the active cell's neighbors in a finished grid
+        /// </summary>
         private List<int> FindNeighborsFinished(int boxNumber)
         {
+            // TODO Improve it or remove it
             IDictionary<string, int> temp = new Dictionary<string, int>();
             temp.Add("top-left", boxNumber - (shape + 1));
             temp.Add("left", boxNumber - shape);
@@ -244,14 +321,14 @@ namespace LifeGame
             temp.Add("right", boxNumber + shape);
             temp.Add("bottom-right", boxNumber + (shape + 1));
 
-            // If return to the last line, then shift 1 to the right
+            // If return to the last line
             if (temp["top"] % shape == shape - 1 || temp["top-left"] % shape == shape - 1 || temp["top-right"] % shape == shape - 1)
             {
                 temp["top-left"] = -1;
                 temp["top"] = -1;
                 temp["top-right"] = -1;
             }
-            // If return to the first line, then shift 1 to the left
+            // If return to the first line
             if (temp["bottom"] % shape == 0 || temp["bottom-left"] % shape == 0 || temp["bottom-right"] % shape == 0)
             {
                 temp["bottom-left"] = -1;
@@ -275,7 +352,10 @@ namespace LifeGame
             return neighbors;
         }
 
-        private List<int> FindNeighborsInfinite(int boxNumber)
+        /// <summary>
+        /// Find the active cell's neighbors in an infinte loop
+        /// </summary>
+        private List<int> FindNeighborsLoop(int boxNumber)
         {
             IDictionary<string, int> temp = new Dictionary<string, int>();
             temp.Add("top-left", boxNumber - (shape + 1));
