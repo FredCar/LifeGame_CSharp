@@ -18,7 +18,6 @@ namespace LifeGame
         private SolidColorBrush colorAlive = Brushes.Gray;
         private SolidColorBrush colorDead = Brushes.AntiqueWhite;
 
-
         public MainWindow()
         {
             InitializeComponent();
@@ -443,6 +442,11 @@ namespace LifeGame
             }
 
             return neighbors;
+        }
+
+        private void slideSpeedValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+
         }
     }
 }

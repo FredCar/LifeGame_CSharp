@@ -20,7 +20,7 @@
             <Grid x:Name="playground" Loaded="playgroundLoaded" Margin="10,10,10,10">
             </Grid>
 
-            <StackPanel Grid.Column="1" VerticalAlignment="Bottom">
+            <StackPanel Grid.Column="1" VerticalAlignment="Bottom" Margin="20,0,8,0">
                 <TextBlock Text="Color when dead" TextAlignment="Center" FontSize="18" Margin="0,0,0,2" VerticalAlignment="Center" />
                 <ComboBox x:Name="comboBoxDead" Margin="20,0,20,10" >
                     <ComboBoxItem Content="AntiqueWhite" IsSelected="True"/>
@@ -43,7 +43,7 @@
                     <ComboBoxItem Content="Black"/>
                     <ComboBoxItem Content="Crimson"/>
                     <ComboBoxItem Content="Gold"/>
-                    <ComboBoxItem Content="Gray" IsSelected="True"/>
+                    <ComboBoxItem Content="Gray" IsSelected="True"/>         
                     <ComboBoxItem Content="Green"/>
                     <ComboBoxItem Content="Lime"/>
                     <ComboBoxItem Content="Orange"/>
@@ -52,21 +52,31 @@
                     <ComboBoxItem Content="Silver"/>
                     <ComboBoxItem Content="White"/>  
                 </ComboBox>
-                <TextBlock Text="Shape x Shape" TextAlignment="Center" FontSize="18" Margin="0,0,0,2" VerticalAlignment="Center" />
-                <TextBox x:Name="tbShape" Text="25" FontSize="22" TextAlignment="Center" Margin="0,0,0,20" Foreground="White" Background="Black" Width="100" Height="30" />
-                <StackPanel Orientation="Horizontal" Margin="20,0,20,0">
-                    <Button x:Name="btnGridRefresh" Width="100" Height="25" Margin="0,0,0,20" Content="Refresh" Background="#FF0056FF" Foreground="White" Click="ClickGridRefresh" FontSize="18" FontWeight="Normal" HorizontalAlignment="Left" />
-                    <Button x:Name="btnGridClear" Width="100" Height="25" Margin="15,0,0,20" Content="Clear" Background="#FFFF5200" Foreground="White" Click="ClickGridClear" FontSize="18" FontWeight="Normal" HorizontalAlignment="Right" />
+                
+                <TextBlock Text="Shape x Shape" TextAlignment="Center" FontSize="18" Margin="0,0,0,10" VerticalAlignment="Center" />
+                <DockPanel Margin="20,0,20,10">
+                    <Slider Margin="0,0,5,0" Maximum="50" x:Name="slideShape" Minimum="2" Orientation="Horizontal" Value="25" DockPanel.Dock="Left" Width="140" IsSnapToTickEnabled="True" TickFrequency="1" />
+                    <TextBox x:Name="tbShape" Text="{Binding ElementName=slideShape, Path=Value, UpdateSourceTrigger=PropertyChanged}" Width="40" DockPanel.Dock="Right" HorizontalAlignment="Right" FontSize="16" TextAlignment="Center" />
+                </DockPanel>
+                
+                <StackPanel Orientation="Horizontal" Margin="20,0,20,0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                    <Button x:Name="btnGridRefresh" Width="90" Height="25" Margin="0,0,0,20" Content="Refresh" Background="#FF0056FF" Foreground="White" Click="ClickGridRefresh" FontSize="18" FontWeight="Normal" HorizontalAlignment="Left" />
+                    <Button x:Name="btnGridClear" Height="25" Margin="10,0,0,20" Content="Clear" Background="#FFFF5200" Foreground="White" Click="ClickGridClear" FontSize="18" FontWeight="Normal" HorizontalAlignment="Right" Width="90" />
                 </StackPanel>
 
                 <Separator Height="5" Background="#FF060606" Margin="20,2,20,10" />
+
+                <TextBlock TextAlignment="Center" FontSize="18" Margin="0,0,0,10">Delay between frames <LineBreak />(in milliseconds)</TextBlock>
+                <DockPanel Margin="20,0,20,10">
+                    <Slider Margin="0,0,5,0" Maximum="1000" x:Name="slideSpeed" ValueChanged="slideSpeedValueChanged" Minimum="1" Orientation="Horizontal" Value="125" DockPanel.Dock="Left" Width="140" IsSnapToTickEnabled="True" TickFrequency="1" />
+                    <TextBox x:Name="tbSpeed" Text="{Binding ElementName=slideSpeed, Path=Value, UpdateSourceTrigger=PropertyChanged}" Width="40" DockPanel.Dock="Right" HorizontalAlignment="Right" FontSize="16" TextAlignment="Center" />
+                </DockPanel>
                 
-                <TextBlock Text="Speed (in milliseconds)" TextAlignment="Center" FontSize="18" Margin="0,0,0,2" />
-                <TextBox x:Name="tbSpeed" Text="125" FontSize="22" TextAlignment="Center" Margin="0,0,0,10" Foreground="White" Background="Black" Width="100" />
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,0,10">
                     <TextBlock Text="Infinite loop" TextAlignment="Center" FontSize="18" Margin="0,0,5,0" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" />
                     <CheckBox x:Name="checkBoxInfinite" Margin="5,0,0,0" VerticalAlignment="Center" IsChecked="True" />
                 </StackPanel>
+                
                 <Button x:Name="btnStart" Content="Start" Grid.Column="1" Width="150" Height="50" FontSize="36" FontWeight="Bold" VerticalAlignment="Bottom" Margin="0,0,0,30" Click="startClick" BorderBrush="{x:Null}" Background="#FF0CA308"/>
             </StackPanel>
         </Grid>
