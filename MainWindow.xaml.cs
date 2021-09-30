@@ -15,8 +15,10 @@ namespace LifeGame
         private bool run = false;
         private int delay = 125;
         private bool infiniteLoop = true;
-        private SolidColorBrush colorAlive = Brushes.Gray;
-        private SolidColorBrush colorDead = Brushes.AntiqueWhite;
+        private string colorStartDead = "AntiqueWhite";
+        private string colorStartAlive = "Gray";
+        private SolidColorBrush colorAlive;
+        private SolidColorBrush colorDead;
 
         public MainWindow()
         {
@@ -25,7 +27,20 @@ namespace LifeGame
 
         private void playgroundLoaded(object sender, RoutedEventArgs e)
         {
+            // Assign colors
+            Color colorDeadBrush = (Color)ColorConverter.ConvertFromString(colorStartDead);
+            colorDead = new SolidColorBrush(colorDeadBrush);
+            Color colorAliveBrush = (Color)ColorConverter.ConvertFromString(colorStartAlive);
+            colorAlive = new SolidColorBrush(colorAliveBrush);
+
             MakeGrid();
+
+            //// Retrieve colors list and bind it with comboBoxes
+            comboBoxDead.ItemsSource = typeof(Brushes).GetProperties();
+            comboBoxDead.SelectedItem = typeof(Brushes).GetProperty(colorStartDead);
+
+            comboBoxAlive.ItemsSource = typeof(Brushes).GetProperties();
+            comboBoxAlive.SelectedItem = typeof(Brushes).GetProperty(colorStartAlive);
         }
 
         private void MakeGrid()
@@ -48,6 +63,7 @@ namespace LifeGame
                 {
                     Button btn = new Button();
                     btn.Background = colorDead;
+                    btn.BorderThickness = new Thickness(0.2);
                     btn.Click += new RoutedEventHandler(ActivateBtn);
                     Grid.SetColumn(btn, j);
                     Grid.SetRow(btn, k);
@@ -76,15 +92,16 @@ namespace LifeGame
             List<int> savedGrid = SaveGrid();
 
             // Retrieve the shape field
-            bool isNumericShape = int.TryParse(tbShape.Text, out shape);
+            int newShape = 0;
+            bool isNumericShape = int.TryParse(tbShape.Text, out newShape);
             if (!isNumericShape)
             {
-                tbShape.Text = "25";
-                shape = 25;
+                tbShape.Text = oldShape.ToString();
+                shape = oldShape;
             }
 
             // Check if the shape has changed
-            if (shape != oldShape)
+            if (newShape != oldShape)
             {
                 MessageBoxResult result = MessageBox.Show(
                     "If the shape has changed, \nthe cells can't not be redraw.",
@@ -97,6 +114,7 @@ namespace LifeGame
                 switch (result)
                 {
                     case MessageBoxResult.OK:
+                        shape = newShape;
                         break;
                     case MessageBoxResult.Cancel:
                         shape = oldShape;
@@ -105,12 +123,14 @@ namespace LifeGame
                 }
             }
 
+            //shape = newShape;
+
             // Retrieve the colors
-            Color colorDeadBrush = (Color)ColorConverter.ConvertFromString(comboBoxDead.Text);
+            Color colorDeadBrush = (Color)ColorConverter.ConvertFromString(comboBoxDead.Text.Substring(37));
             SolidColorBrush brushDead = new SolidColorBrush(colorDeadBrush);
             colorDead = brushDead;
 
-            Color colorAliveBrush = (Color)ColorConverter.ConvertFromString(comboBoxAlive.Text);
+            Color colorAliveBrush = (Color)ColorConverter.ConvertFromString(comboBoxAlive.Text.Substring(37));
             SolidColorBrush brushAlive = new SolidColorBrush(colorAliveBrush);
             colorAlive = brushAlive;
 
@@ -121,12 +141,12 @@ namespace LifeGame
 
             // Generate a new grid
             MakeGrid();
-            if (shape == oldShape)
+            if (newShape == oldShape)
             {
                 RedrawGrid(savedGrid);
             }
 
-            oldShape = shape;
+            oldShape = newShape;
         }
 
         private List<int> SaveGrid()
@@ -172,7 +192,6 @@ namespace LifeGame
             playground.RowDefinitions.Clear();
             playground.ColumnDefinitions.Clear();
 
-            // Generate a new grid
             MakeGrid();
         }
 
@@ -261,7 +280,7 @@ namespace LifeGame
                 int total = 0;
                 foreach (int n in neighbors)
                 {
-                    if (n == -1)
+                    if (n == -1 || n >= (oldShape * oldShape))
                     {
                         continue;
                     }
@@ -442,11 +461,6 @@ namespace LifeGame
             }
 
             return neighbors;
-        }
-
-        private void slideSpeedValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
-        {
-
         }
     }
 }

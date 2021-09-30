@@ -22,35 +22,27 @@
 
             <StackPanel Grid.Column="1" VerticalAlignment="Bottom" Margin="20,0,8,0">
                 <TextBlock Text="Color when dead" TextAlignment="Center" FontSize="18" Margin="0,0,0,2" VerticalAlignment="Center" />
-                <ComboBox x:Name="comboBoxDead" Margin="20,0,20,10" >
-                    <ComboBoxItem Content="AntiqueWhite" IsSelected="True"/>
-                    <ComboBoxItem Content="Black"/>
-                    <ComboBoxItem Content="Crimson"/>
-                    <ComboBoxItem Content="Gold"/>
-                    <ComboBoxItem Content="Gray"/>
-                    <ComboBoxItem Content="Green"/>
-                    <ComboBoxItem Content="Lime"/>
-                    <ComboBoxItem Content="Orange"/>
-                    <ComboBoxItem Content="Pink"/>
-                    <ComboBoxItem Content="Red"/>
-                    <ComboBoxItem Content="Silver"/>
-                    <ComboBoxItem Content="White"/>
+                <ComboBox x:Name="comboBoxDead" Margin="20,0,20,10">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                                <Rectangle Fill="{Binding Name}" Width="16" Height="16" Margin="0,2,5,2" />
+                                <TextBlock Text="{Binding Name}" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
                 </ComboBox>
 
                 <TextBlock Text="Color when alive" TextAlignment="Center" FontSize="18" Margin="0,0,0,2" VerticalAlignment="Center" />
                 <ComboBox x:Name="comboBoxAlive" Margin="20,0,20,10" >
-                    <ComboBoxItem Content="AntiqueWhite"/>
-                    <ComboBoxItem Content="Black"/>
-                    <ComboBoxItem Content="Crimson"/>
-                    <ComboBoxItem Content="Gold"/>
-                    <ComboBoxItem Content="Gray" IsSelected="True"/>         
-                    <ComboBoxItem Content="Green"/>
-                    <ComboBoxItem Content="Lime"/>
-                    <ComboBoxItem Content="Orange"/>
-                    <ComboBoxItem Content="Pink"/>
-                    <ComboBoxItem Content="Red"/>
-                    <ComboBoxItem Content="Silver"/>
-                    <ComboBoxItem Content="White"/>  
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                                <Rectangle Fill="{Binding Name}" Width="16" Height="16" Margin="0,2,5,2" />
+                                <TextBlock Text="{Binding Name}" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
                 </ComboBox>
                 
                 <TextBlock Text="Shape x Shape" TextAlignment="Center" FontSize="18" Margin="0,0,0,10" VerticalAlignment="Center" />
@@ -68,7 +60,7 @@
 
                 <TextBlock TextAlignment="Center" FontSize="18" Margin="0,0,0,10">Delay between frames <LineBreak />(in milliseconds)</TextBlock>
                 <DockPanel Margin="20,0,20,10">
-                    <Slider Margin="0,0,5,0" Maximum="1000" x:Name="slideSpeed" ValueChanged="slideSpeedValueChanged" Minimum="1" Orientation="Horizontal" Value="125" DockPanel.Dock="Left" Width="140" IsSnapToTickEnabled="True" TickFrequency="1" />
+                    <Slider Margin="0,0,5,0" Maximum="1000" x:Name="slideSpeed" Minimum="1" Orientation="Horizontal" Value="125" DockPanel.Dock="Left" Width="140" IsSnapToTickEnabled="True" TickFrequency="1" />
                     <TextBox x:Name="tbSpeed" Text="{Binding ElementName=slideSpeed, Path=Value, UpdateSourceTrigger=PropertyChanged}" Width="40" DockPanel.Dock="Right" HorizontalAlignment="Right" FontSize="16" TextAlignment="Center" />
                 </DockPanel>
                 
