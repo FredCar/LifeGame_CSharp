@@ -97,7 +97,7 @@ namespace LifeGame
             if (!isNumericShape)
             {
                 tbShape.Text = oldShape.ToString();
-                shape = oldShape;
+                newShape = oldShape;
             }
 
             // Check if the shape has changed
@@ -123,16 +123,12 @@ namespace LifeGame
                 }
             }
 
-            //shape = newShape;
-
             // Retrieve the colors
             Color colorDeadBrush = (Color)ColorConverter.ConvertFromString(comboBoxDead.Text.Substring(37));
-            SolidColorBrush brushDead = new SolidColorBrush(colorDeadBrush);
-            colorDead = brushDead;
+            colorDead = new SolidColorBrush(colorDeadBrush);
 
             Color colorAliveBrush = (Color)ColorConverter.ConvertFromString(comboBoxAlive.Text.Substring(37));
-            SolidColorBrush brushAlive = new SolidColorBrush(colorAliveBrush);
-            colorAlive = brushAlive;
+            colorAlive = new SolidColorBrush(colorAliveBrush);
 
             // Clear the old gird content
             playground.Children.Clear();
